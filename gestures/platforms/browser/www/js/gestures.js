@@ -21,11 +21,32 @@ const app = {
     const zona = document.getElementById('zona-gestos');
     const hammertime = new Hammer(zona);
 
-    hammertime.get('pinch').set({enable: true});
     hammertime.get('rotate').set({enable: true});
+    zona.addEventListener('webkitAnimationEnd', (ev) => {
+      zona.className = '';
+    });
 
-    hammertime.on('tap doubletap pan swipe press pinch rotate', (ev) => {
-      document.getElementById('info').innerHTML = ev.type + '!';
+    hammertime.on('doubletap', (ev) => {
+      zona.className = 'doubletap';
+    });
+
+    hammertime.on('press', (ev) => {
+      zona.className = 'press';
+    });
+
+    hammertime.on('swipe', (ev) => {
+      let clase = null;
+      const {direction} = ev;
+
+      if (direction === 4) clase = 'swipe-derecha';
+      if (direction === 2) clase = 'swipe-izquierda';
+
+      zona.className = clase;
+    });
+
+    hammertime.on('rotate', (ev) => {
+      const umbral = 25;
+      if (ev.distance > umbral) zona.className = 'rotate';
     });
   },
 
