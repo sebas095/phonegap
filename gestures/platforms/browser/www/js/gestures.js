@@ -1,7 +1,7 @@
 const app = {
   init() {
     this.iniciarBotones();
-    this.iniciarFastClick();
+    // this.iniciarFastClick();
     this.iniciarHammer();
   },
 
@@ -24,6 +24,10 @@ const app = {
     hammertime.get('rotate').set({enable: true});
     zona.addEventListener('webkitAnimationEnd', (ev) => {
       zona.className = '';
+    });
+
+    hammertime.on('tap', (ev) => {
+      zona.className = 'tap';
     });
 
     hammertime.on('doubletap', (ev) => {
