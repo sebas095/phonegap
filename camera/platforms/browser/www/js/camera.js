@@ -25,8 +25,17 @@ const app = {
   },
 
   fotoTomada(imageURI) {
-    const image = document.getElementById('foto');
-    image.src = imageURI;
+    const img = document.createElement('img');
+    img.onload = () => app.pintarFoto(img);
+    img.src = imageURI;
+  },
+
+  pintarFoto(img) {
+    const canvas = document.getElementById('foto');
+    const context = canvas.getContext('2d');
+    canvas.width = img.width;
+    canvas.height = img.height;
+    context.drawImage(img, 0, 0, img.width, img.height);
   },
 
   errorAlTomarFoto(message) {
