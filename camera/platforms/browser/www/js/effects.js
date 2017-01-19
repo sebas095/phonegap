@@ -4,7 +4,7 @@ const effects = {
       const r = data[i];
       const g = data[i + 1];
       const b = data[i + 2];
-      const brightness = (3 * r + 4 + g + b) >>> 3;
+      const brightness = (3 * r + 4 * g + b) >>> 3;
       data[i] = brightness;
       data[i + 1] = brightness;
       data[i + 2] = brightness;
@@ -33,9 +33,9 @@ const effects = {
       data[i + 1] = g[data[i + 1]];
       data[i + 2] = b[data[i + 2]];
       // apply noise
-      const noise = 20;
+      let noise = 20;
       if (noise > 0) {
-        const noise = Math.round(noise - Math.random() * noise);
+        noise = Math.round(noise - Math.random() * noise);
         for (let j = 0; j < 3; j++) {
           const iPN = noise + data[i + j];
           data[i + j] = (iPN > 255) ? 255 : iPN;
