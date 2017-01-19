@@ -1,16 +1,21 @@
 const app = {
   init() {
     this.iniciarFastClick();
-    this.iniciarBoton();
+    this.iniciarBotones();
   },
 
   iniciarFastClick() {
     FastClick.attach(document.body);
   },
 
-  iniciarBoton() {
+  iniciarBotones() {
     const btnAction = document.getElementById('button-action');
     btnAction.addEventListener('click', this.tomarFoto);
+
+    const filterButtons = document.querySelectorAll('.button-filter');
+    filterButtons[0].addEventListener('click', () => app.aplicarFiltro('gray'));
+    filterButtons[1].addEventListener('click', () => app.aplicarFiltro('negative'));
+    filterButtons[2].addEventListener('click', () => app.aplicarFiltro('sepia'));
   },
 
   tomarFoto() {
@@ -40,9 +45,18 @@ const app = {
 
   errorAlTomarFoto(message) {
     console.log('Fallo al tomar foto o toma cancelada ' + message);
+  },
+
+  aplicarFiltro(filterName) {
+    const canvas = document.getElementById('foto');
+    const context = canvas.getContext('2d');
+    imageData = context.getImageData(0, 0, canvas.width, canvas.height);
+    effects[filterName](imageData.data);
+    context.putImageData(imageData, 0, 0);
   }
 };
 
+let imageData;
 if ('addEventListener' in document) {
   document.addEventListener('DOMContentLoaded', () => {
     app.init();

@@ -47,6 +47,12 @@ body {
   background-color: #FD4140;
 }
 
+.button-filter {
+  font-size: medium;
+  width: 6rem;
+  background-color: #7ABAF2;
+}
+
 #icon {
   max-height: 100%;
 }
