@@ -10,17 +10,25 @@ const app = {
 
   iniciarBotones() {
     const btnAction = document.getElementById('button-action');
-    btnAction.addEventListener('click', this.tomarFoto);
+    btnAction.addEventListener('click', () => {
+      app.cargarFoto(Camera.PictureSourceType.CAMERA);
+    });
 
     const filterButtons = document.querySelectorAll('.button-filter');
     filterButtons[0].addEventListener('click', () => app.aplicarFiltro('gray'));
     filterButtons[1].addEventListener('click', () => app.aplicarFiltro('negative'));
     filterButtons[2].addEventListener('click', () => app.aplicarFiltro('sepia'));
+
+    const btnGallery = document.getElementById('button-gallery');
+    btnGallery.addEventListener('click', () => {
+      app.cargarFoto(Camera.PictureSourceType.PHOTOLIBRARY);
+    });
   },
 
-  tomarFoto() {
+  cargarFoto(pictureSourceType) {
     const opciones = {
       quality: 50,
+      sourceType: pictureSourceType,
       destinationType: Camera.DestinationType.FILE_URI,
       targetWidth: 300,
       targetHeight: 300,
