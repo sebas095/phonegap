@@ -17,6 +17,17 @@ const app = {
       attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://mapbox.com">Mapbox</a>',
       maxZoom: 18
     }).addTo(map);
+
+    app.pintarMarcador([position.coords.latitude, position.coords.longitude], '!Estoy aquí¡', map);
+    map.addEventListener('click', (ev) => {
+      const text = `Marcador en l(${ev.latlng.lat.toFixed(2)}) y L(${ev.latlng.lng.toFixed(2)})`;
+      app.pintarMarcador(ev.latlng, text, map);
+    });
+  },
+
+  pintarMarcador(latlng, text, map) {
+    const marker = L.marker(latlng).addTo(map);
+    marker.bindPopup(text).openPopup();
   },
 
   errorAlSolicitarLocalizacion(err) {
