@@ -27,13 +27,19 @@ const app = {
 
   cargarFoto(pictureSourceType) {
     const opciones = {
-      quality: 50,
+      quality: 100,
       sourceType: pictureSourceType,
       destinationType: Camera.DestinationType.FILE_URI,
       targetWidth: 300,
       targetHeight: 300,
       correctOrientation: true
     };
+
+    if (pictureSourceType !== Camera.PictureSourceType.PHOTOLIBRARY) {
+      opciones.cameraDirection = Camera.Direction.FRONT;
+      opciones.saveToPhotoAlbum = true;
+    }
+
     navigator.camera.getPicture(app.fotoTomada, app.errorAlTomarFoto, opciones);
   },
 
