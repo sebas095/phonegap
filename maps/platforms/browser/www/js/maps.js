@@ -8,12 +8,15 @@ const app = {
   },
 
   dispositivoListo() {
-    navigator.geolocation.getCurrentPosition(app.dibujarCoordenada, app.errorAlSolicitarLocalizacion);
+    navigator.geolocation.getCurrentPosition(app.pintaCoordenadasEnMapa, app.errorAlSolicitarLocalizacion);
   },
 
-  dibujarCoordenada(position) {
-    const coordsDiv = document.getElementById('coords');
-    coordsDiv.innerHTML = `Latitud: ${position.coords.latitude} Longitud: ${position.coords.longitude}`;
+  pintaCoordenadasEnMapa(position) {
+    const map = L.map('map').setView([position.coords.latitude, position.coords.longitude], 13);
+    L.tileLayer('https://api.mapbox.com/styles/v1/mapbox/outdoors-v10/tiles/256/{z}/{x}/{y}?access_token=pk.eyJ1Ijoic2ViYXMwOTUiLCJhIjoiY2l5Y2ZwenY2MDE4MzJxazF1NWQ0a3g2ZiJ9.sYjDwFf_-q3lgrwH7L9f8g', {
+      attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://mapbox.com">Mapbox</a>',
+      maxZoom: 18
+    }).addTo(map);
   },
 
   errorAlSolicitarLocalizacion(err) {
