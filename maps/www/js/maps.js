@@ -8,7 +8,7 @@ const app = {
   },
 
   dispositivoListo() {
-    navigator.geolocation.getCurrentPosition(app.pintaCoordenadasEnMapa, app.errorAlSolicitarLocalizacion);
+    navigator.geolocation.watchPosition(app.pintaCoordenadasEnMapa, app.errorAlSolicitarLocalizacion);
   },
 
   pintaCoordenadasEnMapa(position) {
@@ -18,7 +18,25 @@ const app = {
       maxZoom: 18
     }).addTo(map);
 
-    app.pintarMarcador([position.coords.latitude, position.coords.longitude], '!Estoy aquí¡', map);
+    L.circle([position.coords.latitude, position.coords.longitude], {
+      color: 'red',
+      fillOpacity: 0,
+      radius: 1000
+    }).addTo(map);
+
+    const icon = L.icon({
+      iconUrl: 'img/position.png',
+      shadowUrl: 'img/shadow.png',
+      iconSize: [48, 48], // size of the icon
+      shadowSize: [48, 48], // size of the shadow
+      iconAnchor: [24, 48], // point of the icon which will correspond to marker's location
+      shadowAnchor: [7, 40],  // the same for the shadow
+      popupAnchor: [0, -48] // point from which the popup should open relative to the iconAnchor
+    });
+
+    const marker  = L.marker([position.coords.latitude, position.coords.longitude], {icon}).addTo(map);
+    marker.bindPopup('!Estoy aquí¡').openPopup();
+
     map.addEventListener('click', (ev) => {
       const text = `Marcador en l(${ev.latlng.lat.toFixed(2)}) y L(${ev.latlng.lng.toFixed(2)})`;
       app.pintarMarcador(ev.latlng, text, map);
