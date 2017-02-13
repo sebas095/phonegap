@@ -1,6 +1,7 @@
 const app = {
   init() {
     BALLDIAMETER = 50;
+    dificulty = 0;
 
     speedX = 0;
     speedY = 0;
@@ -18,20 +19,29 @@ const app = {
       game.physics.startSystem(Phaser.Physics.ARCADE);
       game.stage.backgroundColor = '#f27d0c';
       game.load.image('ball', 'img/ball.png');
+      game.load.image('target', 'img/target.png');
     }
 
     function create() {
       scoreText = game.add.text(16, 16, score, {fontSize: '100px', fill: '#757676'})
+
+      target = game.add.sprite(app.initX(), app.initY(), 'target');
       ball = game.add.sprite(app.initX(), app.initY(), 'ball');
+
       game.physics.arcade.enable(ball);
+      game.physics.arcade.enable(target);
+
       ball.body.collideWorldBounds = true;
       ball.body.onWorldBounds = new Phaser.Signal();
       ball.body.onWorldBounds.add(app.decrementScore, this);
     }
 
     function update() {
-      ball.body.velocity.y = (speedY * 300);
-      ball.body.velocity.x = (speedX * -300);
+      dificultyFactor = (300 + (dificulty * 100));
+      ball.body.velocity.y = (speedY * dificultyFactor);
+      ball.body.velocity.x = (speedX * -dificultyFactor);
+
+      game.physics.arcade.overlap(ball, target, app.incrementScore, null, this);
     }
 
     const state = {preload, create, update};
@@ -39,8 +49,20 @@ const app = {
   },
 
   decrementScore() {
-    score--;
+    score = (score > 0)? score - 1 : 0;
     scoreText.text = score;
+  },
+
+  incrementScore() {
+    score++;
+    scoreText.text = score;
+
+    target.body.x = app.initX();
+    target.body.y = app.initY();
+
+    if (score > 0) {
+      dificulty++;
+    }
   },
 
   initX() {
