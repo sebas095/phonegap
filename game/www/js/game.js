@@ -20,16 +20,19 @@ const app = {
       game.stage.backgroundColor = '#f27d0c';
       game.load.image('ball', 'img/ball.png');
       game.load.image('target', 'img/target.png');
+      game.load.image('target2', 'img/target2.png');
     }
 
     function create() {
       scoreText = game.add.text(16, 16, score, {fontSize: '100px', fill: '#757676'})
 
       target = game.add.sprite(app.initX(), app.initY(), 'target');
+      target2 = game.add.sprite(app.initX(), app.initY(), 'target2');
       ball = game.add.sprite(app.initX(), app.initY(), 'ball');
 
       game.physics.arcade.enable(ball);
       game.physics.arcade.enable(target);
+      game.physics.arcade.enable(target2);
 
       ball.body.collideWorldBounds = true;
       ball.body.onWorldBounds = new Phaser.Signal();
@@ -41,7 +44,8 @@ const app = {
       ball.body.velocity.y = (speedY * dificultyFactor);
       ball.body.velocity.x = (speedX * -dificultyFactor);
 
-      game.physics.arcade.overlap(ball, target, app.incrementScore, null, this);
+      game.physics.arcade.overlap(ball, target, () => app.incrementScore(1, target), null, this);
+      game.physics.arcade.overlap(ball, target2, () => app.incrementScore(10, target2), null, this);
     }
 
     const state = {preload, create, update};
@@ -53,8 +57,8 @@ const app = {
     scoreText.text = score;
   },
 
-  incrementScore() {
-    score++;
+  incrementScore(points, target) {
+    score += points;
     scoreText.text = score;
 
     target.body.x = app.initX();
