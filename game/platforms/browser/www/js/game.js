@@ -44,8 +44,14 @@ const app = {
       ball.body.velocity.y = (speedY * dificultyFactor);
       ball.body.velocity.x = (speedX * -dificultyFactor);
 
-      game.physics.arcade.overlap(ball, target, () => app.incrementScore(1, target), null, this);
-      game.physics.arcade.overlap(ball, target2, () => app.incrementScore(10, target2), null, this);
+      game.physics.arcade.overlap(ball, target, () => app.incrementScore(1, target, game), null, this);
+      game.physics.arcade.overlap(ball, target2, () => app.incrementScore(10, target2, game), null, this);
+
+      if(ball.body.checkWorldBounds()){
+        game.stage.backgroundColor = '#800909';
+			} else {
+        game.stage.backgroundColor = app.updateBackgroundColor();
+			}
     }
 
     const state = {preload, create, update};
@@ -57,7 +63,7 @@ const app = {
     scoreText.text = score;
   },
 
-  incrementScore(points, target) {
+  incrementScore(points, target, game) {
     score += points;
     scoreText.text = score;
 
@@ -67,6 +73,16 @@ const app = {
     if (score > 0) {
       dificulty++;
     }
+  },
+
+  updateBackgroundColor() {
+    const r = 242, g = 125, b = 12;
+    if (dificulty <= 1) return '#f27d0c';
+    return `#${app.getColorChannel(r) + app.getColorChannel(g) + app.getColorChannel(b)}`;
+  },
+
+  getColorChannel(tone) {
+    return ((0 | (1 << 8) + tone + (256 - tone) * dificulty / 100).toString(16)).substr(1);
   },
 
   initX() {
