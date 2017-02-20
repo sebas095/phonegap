@@ -17,18 +17,21 @@ const app = {
   startGame() {
     function preload() {
       game.physics.startSystem(Phaser.Physics.ARCADE);
-      game.stage.backgroundColor = '#f27d0c';
-      game.load.image('ball', 'img/ball.png');
-      game.load.image('target', 'img/target.png');
-      game.load.image('target2', 'img/target2.png');
+      game.stage.backgroundColor = "#f27d0c";
+      game.load.image("ball", "img/ball.png");
+      game.load.image("target", "img/target.png");
+      game.load.image("target2", "img/target2.png");
     }
 
     function create() {
-      scoreText = game.add.text(16, 16, score, {fontSize: '100px', fill: '#757676'})
+      scoreText = game.add.text(16, 16, score, {
+        fontSize: "100px",
+        fill: "#757676"
+      });
 
-      target = game.add.sprite(app.initX(), app.initY(), 'target');
-      target2 = game.add.sprite(app.initX(), app.initY(), 'target2');
-      ball = game.add.sprite(app.initX(), app.initY(), 'ball');
+      target = game.add.sprite(app.initX(), app.initY(), "target");
+      target2 = game.add.sprite(app.initX(), app.initY(), "target2");
+      ball = game.add.sprite(app.initX(), app.initY(), "ball");
 
       game.physics.arcade.enable(ball);
       game.physics.arcade.enable(target);
@@ -40,26 +43,38 @@ const app = {
     }
 
     function update() {
-      dificultyFactor = (300 + (dificulty * 100));
-      ball.body.velocity.y = (speedY * dificultyFactor);
-      ball.body.velocity.x = (speedX * -dificultyFactor);
+      dificultyFactor = 300 + dificulty * 100;
+      ball.body.velocity.y = speedY * dificultyFactor;
+      ball.body.velocity.x = speedX * (-dificultyFactor);
 
-      game.physics.arcade.overlap(ball, target, () => app.incrementScore(1, target, game), null, this);
-      game.physics.arcade.overlap(ball, target2, () => app.incrementScore(10, target2, game), null, this);
+      game.physics.arcade.overlap(
+        ball,
+        target,
+        () => app.incrementScore(1, target, game),
+        null,
+        this
+      );
+      game.physics.arcade.overlap(
+        ball,
+        target2,
+        () => app.incrementScore(10, target2, game),
+        null,
+        this
+      );
 
-      if(ball.body.checkWorldBounds()){
-        game.stage.backgroundColor = '#800909';
-			} else {
+      if (ball.body.checkWorldBounds()) {
+        game.stage.backgroundColor = "#800909";
+      } else {
         game.stage.backgroundColor = app.updateBackgroundColor();
-			}
+      }
     }
 
-    const state = {preload, create, update};
-    const game = new Phaser.Game(WIDTH, HEIGHT, Phaser.CANVAS, 'phaser', state);
+    const state = { preload, create, update };
+    const game = new Phaser.Game(WIDTH, HEIGHT, Phaser.CANVAS, "phaser", state);
   },
 
   decrementScore() {
-    score = (score > 0)? score - 1 : 0;
+    score = score > 0 ? score - 1 : 0;
     scoreText.text = score;
   },
 
@@ -77,12 +92,16 @@ const app = {
 
   updateBackgroundColor() {
     const r = 242, g = 125, b = 12;
-    if (dificulty <= 1) return '#f27d0c';
-    return `#${app.getColorChannel(r) + app.getColorChannel(g) + app.getColorChannel(b)}`;
+    if (dificulty <= 1) return "#f27d0c";
+    return `#${app.getColorChannel(r) +
+      app.getColorChannel(g) +
+      app.getColorChannel(b)}`;
   },
 
   getColorChannel(tone) {
-    return ((0 | (1 << 8) + tone + (256 - tone) * dificulty / 100).toString(16)).substr(1);
+    return (0 | (1 << 8) + tone + (256 - tone) * dificulty / 100)
+      .toString(16)
+      .substr(1);
   },
 
   initX() {
@@ -99,7 +118,7 @@ const app = {
 
   sensorsMonitor() {
     function onError() {
-      console.log('onError');
+      console.log("onError");
     }
 
     function onSuccess(data) {
@@ -107,7 +126,9 @@ const app = {
       app.addressRegister(data);
     }
 
-    navigator.accelerometer.watchAcceleration(onSuccess, onError, {frequency: 10});
+    navigator.accelerometer.watchAcceleration(onSuccess, onError, {
+      frequency: 10
+    });
   },
 
   detectAgitation(data) {
@@ -129,8 +150,12 @@ const app = {
   }
 };
 
-if ('addEventListener' in document) {
-  document.addEventListener('deviceready', () => {
-    app.init();
-  }, false);
+if ("addEventListener" in document) {
+  document.addEventListener(
+    "deviceready",
+    () => {
+      app.init();
+    },
+    false
+  );
 }
