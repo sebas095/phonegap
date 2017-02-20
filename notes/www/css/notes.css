@@ -13,6 +13,7 @@ body {
 }
 
 .note-editor {
+  display: none;
   padding: 10px;
 }
 
